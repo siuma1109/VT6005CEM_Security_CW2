@@ -67,10 +67,11 @@ class AuthController
                 'password' => PasswordService::hash($_POST['password'])
             ]);
 
-            DatabaseSessionService::setUser($user);
+            //DatabaseSessionService::setUser($user);
             DatabaseSessionService::remove('register_data');
             DatabaseSessionService::remove('register_errors');
-            return header('Location: /');
+            DatabaseSessionService::set('user_email', $user->email);
+            return header('Location: /mfa');
         } catch (\Exception $e) {
             error_log('Register error: ' . $e->getMessage());
             return header('Location: /register?error=An error occurred during registration');
@@ -121,11 +122,13 @@ class AuthController
             // Successful login
             $this->authService->handleSuccessfulLogin($email);
 
-            DatabaseSessionService::setUser($user);
-            DatabaseSessionService::remove('login_data');
-            DatabaseSessionService::remove('login_data_is_once');
-            DatabaseSessionService::remove('login_errors');
-            return header('Location: /');
+            //DatabaseSessionService::setUser($user);
+
+            // Send MFA code
+            $this->authService->sendMfaCode($user);
+            DatabaseSessionService::set('user_email', $user->email);
+
+            return header('Location: /mfa');
         } catch (\Exception $e) {
             error_log('Login error: ' . $e->getMessage());
             return header('Location: /login?error=An error occurred during login');
@@ -135,6 +138,50 @@ class AuthController
     public function logout()
     {
         DatabaseSessionService::destroy();
+        return header('Location: /');
+    }
+
+    public function mfa()
+    {
+        $errors = DatabaseSessionService::get('mfa_errors');
+        $mfa_data = DatabaseSessionService::get('mfa_data');
+
+        return view('main_page', [
+            'content' => view('auth/mfa', [
+                'errors' => $errors,
+                'mfa_data' => $mfa_data
+            ])
+        ]);
+    }
+
+    public function mfaPost()
+    {
+        $email = DatabaseSessionService::get('user_email');
+        if (!isset($_POST['mfa_code']) || !isset($email)) {
+            DatabaseSessionService::setOnce('mfa_errors', ['MFA code is required']);
+            return header('Location: /mfa');
+        }
+
+        if (strlen($_POST['mfa_code']) !== 6) {
+            DatabaseSessionService::setOnce('mfa_errors', ['MFA code must be 6 digits']);
+            return header('Location: /');
+        }
+
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            DatabaseSessionService::setOnce('mfa_errors', ['Invalid credentials']);
+            return header('Location: /mfa');
+        }
+
+        $verify_result = $this->authService->verifyMfaCode($user, $_POST['mfa_code']);
+        if (!$verify_result) {
+            DatabaseSessionService::setOnce('mfa_errors', ['Invalid credentials']);
+            return header('Location: /mfa');
+        }
+
+        DatabaseSessionService::setUser($user);
+        DatabaseSessionService::remove('mfa_errors');
+        DatabaseSessionService::remove('mfa_data');
         return header('Location: /');
     }
 }

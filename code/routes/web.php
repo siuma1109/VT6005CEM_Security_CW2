@@ -16,6 +16,9 @@ Router::middleware(['guest'], function () {
 
     Router::get('/login', [AuthController::class, 'login']);
     Router::post('/login', [AuthController::class, 'loginPost']);
+
+    Router::get('/mfa', [AuthController::class, 'mfa']);
+    Router::post('/mfa', [AuthController::class, 'mfaPost']);
 });
 
 // Protected routes

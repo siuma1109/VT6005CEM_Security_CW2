@@ -10,6 +10,13 @@ class AuthService
     private const MAX_LOGIN_ATTEMPTS = 5;
     private const LOCKOUT_MINUTES = 30;
 
+    private MfaService $mfaService;
+
+    public function __construct()
+    {
+        $this->mfaService = new MfaService();
+    }
+
     private function getClientIp(): string
     {
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
@@ -66,7 +73,10 @@ class AuthService
         DatabaseSessionService::remove('login_attempts_' . $ip);
         DatabaseSessionService::remove('last_login_attempt_' . $ip);
         DatabaseSessionService::remove('locked_until_' . $ip);
-        // Keep the attempted emails for security monitoring
+
+        DatabaseSessionService::remove('login_data');
+        DatabaseSessionService::remove('login_data_is_once');
+        DatabaseSessionService::remove('login_errors');
     }
 
     public function isLocked(): ?array
@@ -87,5 +97,15 @@ class AuthService
         DatabaseSessionService::remove('locked_until_' . $ip);
         DatabaseSessionService::remove('login_attempts_' . $ip);
         return null;
+    }
+
+    public function sendMfaCode(User $user): bool
+    {
+        return $this->mfaService->sendToEmail($user);
+    }
+
+    public function verifyMfaCode(User $user, string $code): bool
+    {
+        return $this->mfaService->verifyCode($user, $code);
     }
 }

@@ -12,5 +12,7 @@
             "email": "matsunkit1109@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "phpmailer/phpmailer": "^6.10"
+    }
 }

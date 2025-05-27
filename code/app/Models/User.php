@@ -12,5 +12,7 @@ class User extends Model
         'name',
         'email',
         'password',
+        'mfa_code',
+        'mfa_code_expires_at'
     ];
 }

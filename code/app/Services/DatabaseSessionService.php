@@ -113,7 +113,8 @@ class DatabaseSessionService
         $session = self::start();
         $payload = self::getPayload($session);
         unset($payload[$key]);
-        self::updatePayload($session, $payload);
+        $session->payload = json_encode($payload);
+        return $session->save();
     }
 
     public static function destroy()

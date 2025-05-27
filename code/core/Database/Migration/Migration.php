@@ -48,4 +48,4 @@ abstract class Migration implements MigrationInterface
     {
         $this->execute("DROP TABLE IF EXISTS {$table}");
     }
-} 
+}

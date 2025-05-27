@@ -1,0 +1,43 @@
+# PHP specific
+code/vendor/
+/code/node_modules/
+/code/public/hot
+/code/public/storage
+/code/storage/*.key
+/code/storage/logs/*
+/code/storage/framework/cache/*
+/code/storage/framework/sessions/*
+/code/storage/framework/views/*
+/code/storage/framework/testing/*
+/code/storage/framework/testing/*
+*.log
+*.cache
+.phpunit.result.cache
+composer.phar
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.cursor/
+
+# Docker
+postgres_data/
+*.env.docker
+
+# Application specific
+/code/storage/logs/*
+/code/storage/framework/cache/*
+/code/storage/framework/sessions/*
+/code/storage/framework/views/*
+/code/bootstrap/cache/*
+
+# Keep empty directories
+!.gitkeep

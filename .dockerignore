@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.env.example
+.dockerignore
+docker-compose.yml
+Dockerfile
+README.md
+vendor/
+node_modules/
+postgres-data/

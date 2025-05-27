@@ -1,0 +1,53 @@
+services:
+  # PHP Service
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: php
+    restart: unless-stopped
+    volumes:
+      - ./code:/var/www/html
+    networks:
+      - app-network
+
+  # PostgreSQL Service
+  postgres:
+    build:
+      context: .
+      dockerfile: psql.dockerfile
+    container_name: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: security_cw2
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Nginx Service
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./code:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+# Networks
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

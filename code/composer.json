@@ -1,0 +1,16 @@
+{
+    "name": "user/code",
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/",
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "siuma1109",
+            "email": "matsunkit1109@gmail.com"
+        }
+    ],
+    "require": {}
+}

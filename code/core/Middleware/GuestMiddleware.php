@@ -8,7 +8,7 @@ class GuestMiddleware
 {
     public function handle()
     {
-        if (DatabaseSessionService::get('user_id')) {
+        if (DatabaseSessionService::getUser()) {
             header('Location: /');
             exit();
         }

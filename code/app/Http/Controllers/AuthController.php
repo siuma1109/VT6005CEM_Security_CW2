@@ -32,7 +32,13 @@ class AuthController
     public function registerPost()
     {
         try {
-            DatabaseSessionService::setOnce('register_data', $_POST);
+            DatabaseSessionService::setOnce('register_data', [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                // not saving password to session for security reasons
+                // 'password' => $_POST['password'],
+                // 'password_confirmation' => $_POST['password_confirmation']
+            ]);
 
             if (!isset($_POST['name']) || !isset($_POST['email']) || !isset($_POST['password']) || !isset($_POST['password_confirmation'])) {
                 DatabaseSessionService::setOnce('register_errors', ['Name, email, password and confirm password are required']);
@@ -41,6 +47,11 @@ class AuthController
 
             if ($_POST['password'] !== $_POST['password_confirmation']) {
                 DatabaseSessionService::setOnce('register_errors', ['Passwords do not match']);
+                return header('Location: /register');
+            }
+
+            if (PasswordService::isPwnPassword($_POST['password'])) {
+                DatabaseSessionService::setOnce('register_errors', ['Password is pwned']);
                 return header('Location: /register');
             }
 
@@ -56,7 +67,7 @@ class AuthController
                 'password' => PasswordService::hash($_POST['password'])
             ]);
 
-            DatabaseSessionService::set('user_id', $user->id);
+            DatabaseSessionService::setUser($user);
             DatabaseSessionService::remove('register_data');
             DatabaseSessionService::remove('register_errors');
             return header('Location: /');

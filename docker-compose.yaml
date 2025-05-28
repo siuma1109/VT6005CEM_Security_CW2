@@ -37,9 +37,21 @@ services:
       - "80:80"
     volumes:
       - ./code:/var/www/html
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/sites:/etc/nginx/conf.d
     depends_on:
       - php
+    networks:
+      - app-network
+
+  # Mailhog Service
+  mailhog:
+    build:
+      context: .
+      dockerfile: mailhog.dockerfile
+    container_name: mailhog
+    ports:
+      - 8025:8025
+      - 1025:1025
     networks:
       - app-network
 

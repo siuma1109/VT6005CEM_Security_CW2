@@ -25,9 +25,11 @@ class MfaService
 
     public function verifyCode(User $user, string $code): bool
     {
-        if ($user->mfa_code === $code && $user->mfa_code_expires_at > date('Y-m-d H:i:s')) {
-            return true;
+        if (!$user->mfa_code || !$user->mfa_code_expires_at) {
+            return false;
         }
-        return false;
+
+        $currentTime = date('Y-m-d H:i:s');
+        return $user->mfa_code === $code && strtotime($user->mfa_code_expires_at) > strtotime($currentTime);
     }
 }

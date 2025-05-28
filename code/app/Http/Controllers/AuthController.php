@@ -130,6 +130,9 @@ class AuthController
 
             return header('Location: /mfa');
         } catch (\Exception $e) {
+            echo $e->getMessage();
+            echo $e->getLine();
+            echo $e->getFile();
             error_log('Login error: ' . $e->getMessage());
             return header('Location: /login?error=An error occurred during login');
         }

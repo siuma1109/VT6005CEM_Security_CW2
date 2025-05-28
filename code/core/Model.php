@@ -300,13 +300,13 @@ abstract class Model
 
     protected function update(): Model|null
     {
-        $attributes = $this->attributes;
+        $attributes = array_intersect_key($this->attributes, array_flip($this->fillable));
         $sets = [];
+        $values = [];
+
         foreach ($attributes as $key => $value) {
-            if (!in_array($key, $this->fillable)) {
-                continue;
-            }
             $sets[] = "$key = ?";
+            $values[] = $value;
         }
 
         if (empty($sets)) {
@@ -314,7 +314,6 @@ abstract class Model
         }
 
         $query = "UPDATE " . static::getTable() . " SET " . implode(', ', $sets) . " WHERE id = ?";
-        $values = array_values($attributes);
         $values[] = $this->id;
 
         $stmt = static::getConnection()->prepare($query);

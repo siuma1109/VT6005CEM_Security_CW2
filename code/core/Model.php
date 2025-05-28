@@ -3,9 +3,7 @@
 namespace Core;
 
 use PDO;
-use PDOException;
 use App\Database\Database;
-use App\Models\User;
 
 abstract class Model
 {
@@ -285,6 +283,7 @@ abstract class Model
     protected function insert(): Model|null
     {
         $attributes = $this->attributes;
+        $attributes = array_intersect_key($attributes, array_flip($this->fillable));
         $columns = implode(', ', array_keys($attributes));
         $values = implode(', ', array_fill(0, count($attributes), '?'));
 
@@ -303,8 +302,15 @@ abstract class Model
     {
         $attributes = $this->attributes;
         $sets = [];
-        foreach (array_keys($attributes) as $key) {
+        foreach ($attributes as $key => $value) {
+            if (!in_array($key, $this->fillable)) {
+                continue;
+            }
             $sets[] = "$key = ?";
+        }
+
+        if (empty($sets)) {
+            return $this;
         }
 
         $query = "UPDATE " . static::getTable() . " SET " . implode(', ', $sets) . " WHERE id = ?";

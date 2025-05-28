@@ -4,6 +4,7 @@ session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../core/helpers.php';
+(new Core\DotEnvEnvironment)->load(__DIR__ . '/../');
 
 use Core\Router;
 
@@ -19,7 +20,7 @@ try {
     $response = Router::dispatch($uri, $method);
     echo $response;
 } catch (\Exception $e) {
-    //echo $e->getMessage();
+    echo $e->getMessage();
     // Handle 404 or other errors
     http_response_code(404);
     echo '404 Not Found';

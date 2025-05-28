@@ -1,4 +1,9 @@
 <div class="max-w-2xl mx-auto">
+    <?php if ($message): ?>
+        <div class="bg-green-500 text-white p-4 rounded-lg mb-4">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
     <!-- Main Content -->
     <div class="bg-gov-gray p-6 rounded-lg shadow-lg border border-gray-700">
         <h2 class="text-2xl font-bold mb-4 text-gov-text">Public Services</h2>

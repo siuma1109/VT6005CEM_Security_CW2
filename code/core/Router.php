@@ -50,12 +50,13 @@ class Router
             if ($route['uri'] === $uri && $route['method'] === $method) {
                 // Execute middleware
                 foreach ($route['middleware'] as $middleware) {
-                    $middlewareClass = match($middleware) {
+                    $middlewareClass = match ($middleware) {
                         'auth' => \Core\Middleware\AuthMiddleware::class,
                         'guest' => \Core\Middleware\GuestMiddleware::class,
+                        'csrf' => \Core\Middleware\CsrfMiddleware::class,
                         default => throw new \Exception("Middleware {$middleware} not found")
                     };
-                    
+
                     $middlewareInstance = new $middlewareClass();
                     $middlewareInstance->handle();
                 }
@@ -74,4 +75,4 @@ class Router
 
         throw new \Exception('Route not found');
     }
-} 
+}

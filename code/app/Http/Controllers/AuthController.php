@@ -71,6 +71,7 @@ class AuthController
             DatabaseSessionService::remove('register_data');
             DatabaseSessionService::remove('register_errors');
             DatabaseSessionService::set('user_email', $user->email);
+            $this->authService->sendMfaCode($user);
             return header('Location: /mfa');
         } catch (\Exception $e) {
             error_log('Register error: ' . $e->getMessage());

@@ -1,3 +1,10 @@
+<?php
+
+use App\Services\CsrfService;
+
+$csrf_service = new CsrfService();
+?>
+
 <div class="max-w-md mx-auto">
     <div class="bg-gov-gray p-8 rounded-lg shadow-lg border border-gray-700">
         <h2 class="text-2xl font-bold mb-6 text-gov-text text-center">Two-Factor Authentication</h2>
@@ -11,6 +18,7 @@
         <?php endif; ?>
 
         <form action="/mfa" method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="<?= $csrf_service->generateToken() ?>">
             <div>
                 <label for="mfa_code" class="block text-sm font-medium text-gov-text-secondary mb-2">Enter 6-digit code</label>
                 <input type="text" id="mfa_code" name="mfa_code" required maxlength="6" pattern="[0-9]{6}"

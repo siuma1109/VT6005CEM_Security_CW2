@@ -17,13 +17,13 @@ Router::get('/', function () {
 // Guest routes (login/register)
 Router::middleware(['guest'], function () {
     Router::get('/register', [AuthController::class, 'register']);
-    Router::post('/register', [AuthController::class, 'registerPost']);
-
     Router::get('/login', [AuthController::class, 'login']);
-    Router::post('/login', [AuthController::class, 'loginPost']);
-
     Router::get('/mfa', [AuthController::class, 'mfa']);
-    Router::post('/mfa', [AuthController::class, 'mfaPost']);
+    Router::middleware(['csrf'], function () {
+        Router::post('/register', [AuthController::class, 'registerPost']);
+        Router::post('/login', [AuthController::class, 'loginPost']);
+        Router::post('/mfa', [AuthController::class, 'mfaPost']);
+    });
 });
 
 // Protected routes
@@ -31,6 +31,8 @@ Router::middleware(['auth'], function () {
     Router::get('/logout', [AuthController::class, 'logout']);
 
     Router::get('/make_appointment', [AppointmentController::class, 'makeAppointment']);
-    Router::post('/make_appointment', [AppointmentController::class, 'makeAppointmentPost']);
+    Router::middleware(['csrf'], function () {
+        Router::post('/make_appointment', [AppointmentController::class, 'makeAppointmentPost']);
+    });
     Router::get('/appointments', [AppointmentController::class, 'appointments']);
 });

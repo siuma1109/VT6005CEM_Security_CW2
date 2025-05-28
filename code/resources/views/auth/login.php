@@ -1,3 +1,10 @@
+<?php
+
+use App\Services\CsrfService;
+
+$csrf_service = new CsrfService();
+?>
+
 <div class="max-w-md mx-auto">
     <div class="bg-gov-gray p-8 rounded-lg shadow-lg border border-gray-700">
         <h2 class="text-2xl font-bold mb-6 text-gov-text text-center">Login</h2>
@@ -11,6 +18,8 @@
         <?php endif; ?>
 
         <form action="/login" method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="<?= $csrf_service->generateToken() ?>">
+
             <div>
                 <label for="email" class="block text-sm font-medium text-gov-text-secondary mb-2">Email</label>
                 <input type="email" id="email" name="email" required

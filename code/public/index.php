@@ -21,6 +21,8 @@ try {
     echo $response;
 } catch (\Exception $e) {
     echo $e->getMessage();
+    echo $e->getLine();
+    echo $e->getFile();
     // Handle 404 or other errors
     http_response_code(404);
     echo '404 Not Found';

@@ -1,9 +1,8 @@
 <?php
 
-// CSRF Protection
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+use App\Services\CsrfService;
+
+$csrf_service = new CsrfService();
 ?>
 
 <div class="max-w-4xl mx-auto">
@@ -19,7 +18,7 @@ if (!isset($_SESSION['csrf_token'])) {
         <?php endif; ?>
 
         <form action="/make_appointment" method="POST" class="space-y-6" id="appointmentForm">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+            <input type="hidden" name="csrf_token" value="<?= $csrf_service->generateToken() ?>">
 
             <!-- Personal Information Section -->
             <div class="space-y-6">

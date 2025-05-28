@@ -1,3 +1,10 @@
+<?php
+
+use App\Services\CsrfService;
+
+$csrf_service = new CsrfService();
+?>
+
 <div class="max-w-md mx-auto">
     <div class="bg-gov-gray p-8 rounded-lg shadow-lg border border-gray-700">
         <h2 class="text-2xl font-bold mb-6 text-gov-text text-center">Register</h2>
@@ -11,6 +18,7 @@
         <?php endif; ?>
 
         <form action="/register" method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="<?= $csrf_service->generateToken() ?>">
 
             <?php if (isset($register_errors)): ?>
                 <div class="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded mb-4">

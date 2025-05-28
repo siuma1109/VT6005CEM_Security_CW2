@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://js.hcaptcha.com; style-src 'self' 'unsafe-inline'; frame-src 'self' https://newassets.hcaptcha.com;">
     <title>HKID Card Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>

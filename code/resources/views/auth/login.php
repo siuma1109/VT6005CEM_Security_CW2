@@ -17,8 +17,9 @@ $csrf_service = new CsrfService();
             </div>
         <?php endif; ?>
 
-        <form action="/login" method="POST" class="space-y-6">
+        <form action="/login" method="POST" class="space-y-6" id="login-form">
             <input type="hidden" name="csrf_token" value="<?= $csrf_service->generateToken() ?>">
+            <input type="hidden" name="h-captcha-response" id="h-captcha-response">
 
             <div>
                 <label for="email" class="block text-sm font-medium text-gov-text-secondary mb-2">Email</label>
@@ -34,14 +35,7 @@ $csrf_service = new CsrfService();
                     placeholder="Enter your password">
             </div>
 
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input type="checkbox" id="remember" name="remember"
-                        class="h-4 w-4 rounded border-gray-700 bg-secondary-black text-blue-500 focus:ring-blue-500 focus:ring-offset-0">
-                    <label for="remember" class="ml-2 block text-sm text-gov-text-secondary">Remember me</label>
-                </div>
-                <!-- <a href="/forgot-password" class="text-sm text-blue-500 hover:text-blue-400 transition-colors">Forgot password?</a> -->
-            </div>
+            <div id="h-captcha-container" class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001"></div>
 
             <button type="submit"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gov-gray">
@@ -57,3 +51,21 @@ $csrf_service = new CsrfService();
         </div>
     </div>
 </div>
+
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script>
+    window.onload = function() {
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (typeof hcaptcha === 'undefined') {
+                alert('Please wait for the security check to load');
+                return;
+            }
+
+            const response = hcaptcha.getResponse();
+            document.getElementById('h-captcha-response').value = response;
+            document.getElementById('login-form').submit();
+        });
+    };
+</script>

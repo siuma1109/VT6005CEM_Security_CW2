@@ -6,14 +6,17 @@ use App\Models\User;
 use App\Services\AuthService;
 use App\Services\DatabaseSessionService;
 use App\Services\PasswordService;
+use App\Services\HCaptchaService;
 
 class AuthController
 {
     private AuthService $authService;
+    private HCaptchaService $hCaptchaService;
 
     public function __construct()
     {
         $this->authService = new AuthService();
+        $this->hCaptchaService = new HCaptchaService();
     }
 
     public function register()
@@ -95,8 +98,18 @@ class AuthController
     public function loginPost()
     {
         try {
+            DatabaseSessionService::setOnce('login_data', [
+                'email' => $_POST['email'],
+            ]);
+
             if (!isset($_POST['email']) || !isset($_POST['password'])) {
                 DatabaseSessionService::setOnce('login_errors', ['Email and password are required']);
+                return header('Location: /login');
+            }
+
+            // Verify hCaptcha
+            if (!isset($_POST['h-captcha-response']) || !$this->hCaptchaService->verify($_POST['h-captcha-response'])) {
+                DatabaseSessionService::setOnce('login_errors', ['Please complete the captcha verification']);
                 return header('Location: /login');
             }
 
@@ -122,8 +135,6 @@ class AuthController
 
             // Successful login
             $this->authService->handleSuccessfulLogin($email);
-
-            //DatabaseSessionService::setUser($user);
 
             // Send MFA code
             $this->authService->sendMfaCode($user);

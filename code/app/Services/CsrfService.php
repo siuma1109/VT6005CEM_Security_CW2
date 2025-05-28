@@ -26,9 +26,11 @@ class CsrfService
         if (!$this->token) {
             return false;
         }
-
-        $decryptedToken = $this->encryptionService->decrypt($token);
-
-        return hash_equals($this->token, $decryptedToken);
+        try {
+            $decryptedToken = $this->encryptionService->decrypt($token);
+            return $this->token === $decryptedToken;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

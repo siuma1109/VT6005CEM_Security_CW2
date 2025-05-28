@@ -30,14 +30,18 @@ services:
 
   # Nginx Service
   nginx:
-    image: nginx:latest
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
     container_name: nginx
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./code:/var/www/html
       - ./nginx/sites:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
     depends_on:
       - php
     networks:

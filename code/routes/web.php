@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SessionController;
 use App\Services\DatabaseSessionService;
 use Core\Router;
 
@@ -31,8 +32,10 @@ Router::middleware(['auth'], function () {
     Router::get('/logout', [AuthController::class, 'logout']);
 
     Router::get('/make_appointment', [AppointmentController::class, 'makeAppointment']);
+    Router::get('/sessions', [SessionController::class, 'sessions']);
     Router::middleware(['csrf'], function () {
         Router::post('/make_appointment', [AppointmentController::class, 'makeAppointmentPost']);
+        Router::post('/delete-session', [SessionController::class, 'deleteSession']);
     });
     Router::get('/appointments', [AppointmentController::class, 'appointments']);
 });

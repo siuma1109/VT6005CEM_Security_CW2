@@ -18,6 +18,16 @@ class DatabaseSessionService
                 $session = Session::where('id', $sessionId)->first();
                 if (!$session) {
                     self::$session = self::createSession();
+                    // Set cookie when creating new session after failed lookup
+                    if (self::$session) {
+                        setcookie('session_id', self::$session->id, [
+                            'expires' => time() + 86400, // 24 hours
+                            'path' => '/',
+                            'secure' => true,
+                            'httponly' => true,
+                            'samesite' => 'Lax'
+                        ]);
+                    }
                 } else {
                     self::$session = $session;
                 }
@@ -39,6 +49,15 @@ class DatabaseSessionService
                     error_log('Session creation error: ' . $e->getMessage());
                     // If session creation fails, try one more time with a new ID
                     self::$session = self::createSession();
+                    if (self::$session) {
+                        setcookie('session_id', self::$session->id, [
+                            'expires' => time() + 86400, // 24 hours
+                            'path' => '/',
+                            'secure' => true,
+                            'httponly' => true,
+                            'samesite' => 'Lax'
+                        ]);
+                    }
                 }
             }
 
@@ -173,5 +192,10 @@ class DatabaseSessionService
     public static function getPayload(Session $session)
     {
         return json_decode($session->payload, true) ?? [];
+    }
+
+    public static function getSession()
+    {
+        return self::$session;
     }
 }

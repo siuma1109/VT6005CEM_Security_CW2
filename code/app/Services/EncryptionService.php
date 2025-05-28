@@ -10,7 +10,7 @@ class EncryptionService
 
     public function __construct()
     {
-        $this->key = $_ENV['APP_KEY'];
+        $this->key = getenv('APP_KEY');
     }
 
     public function encrypt($data)

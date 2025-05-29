@@ -30,9 +30,14 @@ $csrf_service = new CsrfService();
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gov-text-secondary mb-2">Password</label>
-                <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-2 rounded bg-secondary-black border border-gray-700 text-gov-text focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Enter your password">
+                <div class="relative">
+                    <input type="password" id="password" name="password" required
+                        class="w-full px-4 py-2 rounded bg-secondary-black border border-gray-700 text-gov-text focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        placeholder="Enter your password">
+                    <button type="button" id="toggle-password" class="absolute right-2 top-2 text-gray-500">
+                        Show
+                    </button>
+                </div>
             </div>
 
             <div id="h-captcha-container" class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001"></div>
@@ -66,6 +71,18 @@ $csrf_service = new CsrfService();
             const response = hcaptcha.getResponse();
             document.getElementById('h-captcha-response').value = response;
             document.getElementById('login-form').submit();
+        });
+
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = this;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = 'Show';
+            }
         });
     };
 </script>

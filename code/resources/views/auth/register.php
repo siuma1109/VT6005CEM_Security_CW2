@@ -44,16 +44,26 @@ $csrf_service = new CsrfService();
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gov-text-secondary mb-2">Password</label>
-                <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-2 rounded bg-secondary-black border border-gray-700 text-gov-text focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Create a password" value="<?= htmlspecialchars($register_data['password'] ?? '') ?>">
+                <div class="relative">
+                    <input type="password" id="password" name="password" required
+                        class="w-full px-4 py-2 rounded bg-secondary-black border border-gray-700 text-gov-text focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        placeholder="Enter your password">
+                    <button type="button" id="toggle-password" class="absolute right-2 top-2 text-gray-500">
+                        Show
+                    </button>
+                </div>
             </div>
 
             <div>
                 <label for="password_confirmation" class="block text-sm font-medium text-gov-text-secondary mb-2">Confirm Password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required
-                    class="w-full px-4 py-2 rounded bg-secondary-black border border-gray-700 text-gov-text focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Confirm your password" value="<?= htmlspecialchars($register_data['password_confirmation'] ?? '') ?>">
+                <div class="relative">
+                    <input type="password" id="password_confirmation" name="password_confirmation" required
+                        class="w-full px-4 py-2 rounded bg-secondary-black border border-gray-700 text-gov-text focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        placeholder="Confirm your password">
+                    <button type="button" id="toggle-password-confirmation" class="absolute right-2 top-2 text-gray-500">
+                        Show
+                    </button>
+                </div>
             </div>
 
             <button type="submit"
@@ -70,3 +80,29 @@ $csrf_service = new CsrfService();
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('toggle-password').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const toggleButton = this;
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.textContent = 'Hide';
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.textContent = 'Show';
+        }
+    });
+
+    document.getElementById('toggle-password-confirmation').addEventListener('click', function() {
+        const passwordConfirmationInput = document.getElementById('password_confirmation');
+        const toggleButton = this;
+        if (passwordConfirmationInput.type === 'password') {
+            passwordConfirmationInput.type = 'text';
+            toggleButton.textContent = 'Hide';
+        } else {
+            passwordConfirmationInput.type = 'password';
+            toggleButton.textContent = 'Show';
+        }
+    });
+</script>

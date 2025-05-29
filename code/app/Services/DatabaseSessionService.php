@@ -24,7 +24,6 @@ class DatabaseSessionService
                             'expires' => time() + 86400, // 24 hours
                             'path' => '/',
                             'secure' => true,
-                            'httponly' => true,
                             'samesite' => 'Lax'
                         ]);
                     }
@@ -41,7 +40,6 @@ class DatabaseSessionService
                             'expires' => time() + 86400, // 24 hours
                             'path' => '/',
                             'secure' => true,
-                            'httponly' => true,
                             'samesite' => 'Lax'
                         ]);
                     }
@@ -54,7 +52,6 @@ class DatabaseSessionService
                             'expires' => time() + 86400, // 24 hours
                             'path' => '/',
                             'secure' => true,
-                            'httponly' => true,
                             'samesite' => 'Lax'
                         ]);
                     }
@@ -144,7 +141,6 @@ class DatabaseSessionService
                 'expires' => time() - 3600,
                 'path' => '/',
                 'secure' => true,
-                'httponly' => true,
                 'samesite' => 'Lax'
             ]);
             self::$session = null;
